@@ -39,8 +39,8 @@ build-image:
 		-var 'playbook_path=$(ANSIBLE_PLAYBOOK_PATH)' \
 		$(PACKER_TEMPLATE_NAME)
 
-.PHONY: start-server
-start-server: .tmp/server_ip
+.PHONY: create-server
+create-server: .tmp/server_ip
 .tmp/server_ip: $(HCLOUD)
 	$(HCLOUD) server create \
 		--name $(HCLOUD_SERVER_NAME) \
@@ -56,8 +56,8 @@ start-server: .tmp/server_ip
 provision-server: .tmp/server_ip
 	ansible-playbook -i $(shell cat .tmp/server_ip), --user root $(ANSIBLE_PLAYBOOK_PATH)
 
-.PHONY: stop-server
-stop-server: $(HCLOUD)
+.PHONY: delete-server
+delete-server: $(HCLOUD)
 	$(HCLOUD) server delete $(HCLOUD_SERVER_NAME) || true
 	rm -f .tmp/server_ip
 
